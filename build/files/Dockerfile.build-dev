@@ -44,7 +44,7 @@ RUN npm install -g doctoc
 
 # clang
 RUN curl -L https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
-    add-apt-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-10 main" && \
+    add-apt-repository "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-20 main" && \
     apt-get update -y && \
     apt-get install -y clang clang-format clang-tidy
 
