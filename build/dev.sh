@@ -15,9 +15,17 @@ if [ "$ARCH" == "arm64" ]; then
     export ARCH="arm64v8"
 fi
 
+# Pass DISABLE_SANITIZERS environment variable if set
+ENV_FLAGS=""
+if [ -n "${DISABLE_SANITIZERS:-}" ]; then
+    echo "Disabling sanitizers."
+    ENV_FLAGS="-e DISABLE_SANITIZERS=1"
+fi
+
 scripts/depsDownload.sh
 
 cat files/Dockerfile.build-dev | sed "s/\$IMAGE_NAME/$IMAGE_NAME/g; s/\$HOST_UID/$HOST_UID/g; s/\$HOST_GID/$HOST_GID/g; s/\$ARCH/$ARCH/g; s/\$USER/$USER/g; s/\$GIT_NAME/$GIT_NAME/g; s/\$GIT_EMAIL/$GIT_EMAIL/g" | docker buildx build --progress plain -t $IMAGE_NAME files -f-
 
 cd ..
-docker run --rm ${TTY_FLAG:=--tty --interactive} --volume "$PWD:/code" --workdir /code --name $IMAGE_NAME $IMAGE_NAME "$@"
+
+docker run --rm ${TTY_FLAG:=--tty --interactive} $ENV_FLAGS --volume "$PWD:/code" --workdir /code --name $IMAGE_NAME $IMAGE_NAME "$@"
