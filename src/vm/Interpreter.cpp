@@ -544,7 +544,6 @@ bool Interpreter::run(int maxCycles) {
             case Opcode::kSystemCallO:
             case Opcode::kSystemCallV:
             case Opcode::kSystemCallVO: {
-                // If you're getting unknown here, check NAMEOF_ENUM_RANGE_MAX.
                 std::cerr << " [" << NAMEOF_ENUM_OR(syscall, "unknown!") << "]";
                 break;
             }

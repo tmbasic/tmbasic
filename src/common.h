@@ -70,8 +70,19 @@
 #include <immer/flex_vector_transient.hpp>
 
 // nameof
-#define NAMEOF_ENUM_RANGE_MAX 256  // our biggest enum is SystemCall
+#define NAMEOF_ENUM_RANGE_MAX 256
 #include <nameof.hpp>
+#include "shared/SystemCalls.h"
+
+// SystemCall grows as built-ins are added. Keep its reflection range in sync
+// without increasing the range scanned for every other enum.
+namespace nameof::customize {
+template <>
+struct enum_range<shared::SystemCall> {
+    static constexpr int min = 0;
+    static constexpr int max = static_cast<int>(shared::SystemCall::kMaxSystemCall) - 1;
+};
+}  // namespace nameof::customize
 
 // fmt
 #include <fmt/format.h>
