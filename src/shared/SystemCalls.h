@@ -5,7 +5,7 @@
 
 namespace shared {
 
-// This enum is big enough that it requires NAMEOF_ENUM_RANGE_MAX to be increased.
+// Its nameof reflection range is configured in common.h.
 enum class SystemCall {
     kAbs,
     kAcos,

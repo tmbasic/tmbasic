@@ -38,7 +38,7 @@ echo '#pragma once' >> $OUTFILE
 echo >> $OUTFILE
 echo 'namespace shared {' >> $OUTFILE
 echo >> $OUTFILE
-echo '// This enum is big enough that it requires NAMEOF_ENUM_RANGE_MAX to be increased.' >> $OUTFILE
+echo '// Its nameof reflection range is configured in common.h.' >> $OUTFILE
 echo 'enum class SystemCall {' >> $OUTFILE
 echo $SYSTEM_CALLS | awk 'BEGIN { RS = " " } { print "    k" $1 "," }' >> $OUTFILE
 echo >> $OUTFILE
