@@ -11,12 +11,15 @@ DEPFILES=
 function downloadFile {
     # $1=filename, $2=url
 
-    # If $USE_R2_MIRROR is set, we will download from our S3 bucket instead of the original source.
+    # Prefer our mirror, falling back to upstream for versions not mirrored yet.
     if [ -n "${USE_R2_MIRROR:-}" ]; then
         if [ ! -f "$1" ]; then
             echo "Downloading $2 from R2 mirror..."
             URL="https://tmbasic-archive.com/deps/$1"
-            curl -L -o "$1.tmp" "$URL"
+            if ! curl -fL -o "$1.tmp" --retry 5 "$URL"; then
+                echo "Mirror unavailable; downloading $2..."
+                curl -fL -o "$1.tmp" --retry 5 "$2"
+            fi
             mv -f "$1.tmp" "$1"
         fi
         DEPFILES="$DEPFILES $1"
@@ -26,7 +29,7 @@ function downloadFile {
     # Otherwise, download from the original source.
     if [ ! -f "$1" ]; then
         echo "Downloading $2..."
-        curl -L -o "$1.tmp" --retry 5 "$2"
+        curl -fL -o "$1.tmp" --retry 5 "$2"
         mv -f "$1.tmp" "$1"
     fi
     DEPFILES="$DEPFILES $1"
@@ -44,7 +47,7 @@ LIBZIP_VERSION=1.11.3
 LIEF_VERSION=0.16.5
 MICROTAR_VERSION=27076e1b9290e9c7842bb7890a54fcf172406c84
 MPDECIMAL_VERSION=4.0.0
-NAMEOF_VERSION=0.10.4
+NAMEOF_VERSION=0.12.0
 NCURSES_VERSION=6.5
 TURBO_VERSION=90ab61b2d1915764fbcff0542c667efb2802a109
 TVISION_VERSION=8605384659274edf1db39abef5338d2573c3e0b6
